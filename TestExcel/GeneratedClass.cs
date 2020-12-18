@@ -25,42 +25,40 @@ namespace TestExcel
         // Adds child parts and generates content of the specified part.
         private void CreateParts(SpreadsheetDocument document)
         {
-            WorkbookPart workbookPart1 = document.AddWorkbookPart();
-            GenerateWorkbookPart1Content(workbookPart1);
+            WorkbookPart workbookPart = document.AddWorkbookPart();
+            GenerateWorkbookContent(workbookPart);
 
-            WorkbookStylesPart workbookStylesPart1 = workbookPart1.AddNewPart<WorkbookStylesPart>("rId3");
-            GenerateWorkbookStylesPart1Content(workbookStylesPart1);
+            WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>("rId3");
+            GenerateWorkbookStylesPart1Content(workbookStylesPart);
 
-            WorksheetPart worksheetPart1 = workbookPart1.AddNewPart<WorksheetPart>("rId1");
-            GenerateWorksheetPart1Content(worksheetPart1);
+            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("rId1");
+            GenerateWorksheetContent(worksheetPart);
 
-            TableDefinitionPart tableDefinitionPart1 = worksheetPart1.AddNewPart<TableDefinitionPart>("rId2");
-            GenerateTableDefinitionPart1Content(tableDefinitionPart1);
+            TableDefinitionPart tableDefinitionPart = worksheetPart.AddNewPart<TableDefinitionPart>("rId2");
+            GenerateTableDefinition(tableDefinitionPart);
         }
 
-        // Generates content of workbookPart1.
-        private void GenerateWorkbookPart1Content(WorkbookPart workbookPart1)
+        // Generates content of workbook.
+        private void GenerateWorkbookContent(WorkbookPart workbookPart)
         {
-            Workbook workbook1 = new Workbook { MCAttributes = new MarkupCompatibilityAttributes(){ Ignorable = "x15 xr xr6 xr10 xr2" }  };
-            workbook1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relation ships");
-            workbook1.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
-            workbook1.AddNamespaceDeclaration("x15", "http://schemas.microsoft.com/office/spreadsheetml/2010/11/main");
-            workbook1.AddNamespaceDeclaration("xr", "http://schemas.microsoft.com/office/spreadsheetml/2014/revision");
-            workbook1.AddNamespaceDeclaration("xr6", "http://schemas.microsoft.com/office/spreadsheetml/2016/revision6");
-            workbook1.AddNamespaceDeclaration("xr10", "http://schemas.microsoft.com/office/spreadsheetml/2016/revision10");
-            workbook1.AddNamespaceDeclaration("xr2", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2");
+            Workbook workbook = new Workbook { MCAttributes = new MarkupCompatibilityAttributes(){ Ignorable = "x15 xr xr6 xr10 xr2" }  };
+            workbook.AddNamespaceDeclaration("x15", "http://schemas.microsoft.com/office/spreadsheetml/2010/11/main");
+            workbook.AddNamespaceDeclaration("xr", "http://schemas.microsoft.com/office/spreadsheetml/2014/revision");
+            workbook.AddNamespaceDeclaration("xr6", "http://schemas.microsoft.com/office/spreadsheetml/2016/revision6");
+            workbook.AddNamespaceDeclaration("xr10", "http://schemas.microsoft.com/office/spreadsheetml/2016/revision10");
+            workbook.AddNamespaceDeclaration("xr2", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2");
 
-            Sheets sheets1 = new Sheets();
+            Sheets sheets = new Sheets();
             Sheet sheet1 = new Sheet { Name = "Report", SheetId = 1U, Id = "rId1" };
             
-            sheets1.Append(sheet1);
+            sheets.Append(sheet1);
             
-            workbook1.Append(sheets1);
+            workbook.Append(sheets);
 
-            workbookPart1.Workbook = workbook1;
+            workbookPart.Workbook = workbook;
         }
 
-        // Generates content of workbookStylesPart1.
+        // Generates Styles for Workbook.
         private void GenerateWorkbookStylesPart1Content(WorkbookStylesPart workbookStylesPart1)
         {
             Stylesheet stylesheet1 = new Stylesheet(){ MCAttributes = new MarkupCompatibilityAttributes(){ Ignorable = "x14ac x16r2 xr" }  };
@@ -166,19 +164,15 @@ namespace TestExcel
             workbookStylesPart1.Stylesheet = stylesheet1;
         }
         
-        // Generates content of worksheetPart1.
-        private void GenerateWorksheetPart1Content(WorksheetPart worksheetPart1)
+        // Generates Worksheet Data.
+        private void GenerateWorksheetContent(WorksheetPart worksheetPart1)
         {
             Worksheet worksheet1 = new Worksheet(){ MCAttributes = new MarkupCompatibilityAttributes(){ Ignorable = "x14ac xr xr2 xr3" }  };
-            worksheet1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-            worksheet1.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
             worksheet1.AddNamespaceDeclaration("x14ac", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac");
             worksheet1.AddNamespaceDeclaration("xr", "http://schemas.microsoft.com/office/spreadsheetml/2014/revision");
             worksheet1.AddNamespaceDeclaration("xr2", "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2");
             worksheet1.AddNamespaceDeclaration("xr3", "http://schemas.microsoft.com/office/spreadsheetml/2016/revision3");
             worksheet1.SetAttribute(new OpenXmlAttribute("xr", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2014/revision", "{AB762A7B-1BC4-4BEC-86BE-67D5F0445939}"));
-            
-            SheetFormatProperties sheetFormatProperties1 = new SheetFormatProperties(){ DefaultRowHeight = 14.6D, DyDescent = 0.4D };
 
             SheetData sheetData1 = new SheetData();
 
@@ -202,24 +196,20 @@ namespace TestExcel
 
             sheetData1.Append(row1);
             sheetData1.Append(row2);
-            
-            PageSetup pageSetup1 = new PageSetup(){ Orientation = OrientationValues.Portrait, Id = "rId1" };
 
             TableParts tableParts1 = new TableParts(){ Count = (UInt32Value)1U };
             TablePart tablePart1 = new TablePart(){ Id = "rId2" };
 
             tableParts1.Append(tablePart1);
             
-            worksheet1.Append(sheetFormatProperties1);
             worksheet1.Append(sheetData1);
-            worksheet1.Append(pageSetup1);
             worksheet1.Append(tableParts1);
 
             worksheetPart1.Worksheet = worksheet1;
         }
 
-        // Generates content of tableDefinitionPart1.
-        private void GenerateTableDefinitionPart1Content(TableDefinitionPart tableDefinitionPart1)
+        // Generates Table Definition.
+        private void GenerateTableDefinition(TableDefinitionPart tableDefinitionPart1)
         {
             Table table1 = new Table(){ Id = (UInt32Value)1U, Name = "Table1", DisplayName = "Table1", Reference = "A1:B7", TotalsRowShown = false, HeaderRowFormatId = (UInt32Value)1U, DataFormatId = (UInt32Value)0U, MCAttributes = new MarkupCompatibilityAttributes(){ Ignorable = "xr xr3" }  };
             table1.AddNamespaceDeclaration("xr", "http://schemas.microsoft.com/office/spreadsheetml/2014/revision");
