@@ -301,9 +301,22 @@ namespace ExcelTableCreator
             worksheet.SetAttribute(new OpenXmlAttribute("xr", "uid", "http://schemas.microsoft.com/office/spreadsheetml/2014/revision", "{AB762A7B-1BC4-4BEC-86BE-67D5F0445939}"));
 
             SheetData sheetData = new SheetData();
+
+            Row header = new Row { RowIndex = 1U, Spans = new ListValue<StringValue> { InnerText = "1:2" }, DyDescent = 0.4D };
+            for (var i = 0; i < _tableColumns.Count; i++)
+            {
+                string column = ConvertToAlphabetBasedNumber(i+1);
+                
+                Cell cell = new Cell { CellReference = $"{column}1",
+                    StyleIndex = 1U, DataType = CellValues.String, CellValue = new CellValue(_tableColumns[i])};
+
+                header.Append(cell);
+            }
+
+            sheetData.Append(header);
             
             for (var y = 0; y < _rows.Count; y++) {
-                uint rowIndex = (uint) (y + 1);
+                uint rowIndex = (uint) (y + 2);//1 based index plus the header 
                 Row row = new Row { RowIndex = rowIndex, Spans = new ListValue<StringValue> { InnerText = "1:2" }, DyDescent = 0.4D };
 
                 for (var x = 0; x < _rows[y].Count; x++) {
@@ -338,7 +351,7 @@ namespace ExcelTableCreator
         /// <param name="tableDefinitionPart">Table Definition To add Table to</param>
         private void GenerateTableDefinition(TableDefinitionPart tableDefinitionPart)
         {
-            var columnEnd = ConvertToAlphabetBasedNumber(_tableColumns.Count-1); //This function is zero based index
+            var columnEnd = ConvertToAlphabetBasedNumber(_tableColumns.Count); //This function is zero based index
             var rowEnd = _rows.Count + 1; //Need to include the header
 
             var table = new DocumentFormat.OpenXml.Spreadsheet.Table {
@@ -361,7 +374,7 @@ namespace ExcelTableCreator
 
             for (var i = 0; i < tableColumns.Count; i++) {
                 tableColumns.Append(new TableColumn
-                    {Id = (uint)i, Name = _tableColumns[i], DataFormatId = 2U});
+                    {Id = (uint)(i+1), Name = _tableColumns[i], DataFormatId = 2U});
             }
 
             TableStyleInfo tableStyleInfo1 = new TableStyleInfo { Name = "TableStyleMedium15", ShowFirstColumn = false, ShowLastColumn = false, ShowRowStripes = true, ShowColumnStripes = false };

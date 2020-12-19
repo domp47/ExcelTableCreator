@@ -12,12 +12,12 @@ namespace TestExcel
 
         static void Main(string[] args)
         {
-            // var file = "C:\\temp\\Excel\\test.xlsx";
-            var file = "/tmp/Excel/test.xlsx";
+            var file = "C:\\temp\\Excel\\test.xlsx";
+            // var file = "/tmp/Excel/test.xlsx";
 
             var englishDic = File.ReadAllLines("English.dic");
 
-            var nColumns = 25;
+            var nColumns = 50;
             
             var columns = new List<string>();
 
@@ -39,7 +39,7 @@ namespace TestExcel
             const int seed = 32;
             var rnd = new Random(seed);
 
-            var nRows = rnd.Next(50, 250);
+            var nRows = rnd.Next(250, 500);
             for (var i = 0; i < nRows; i++) {
 
                 var row = new List<TableCell>();
@@ -49,22 +49,13 @@ namespace TestExcel
 
                     switch (type) {
                         case 0:
-                            row.Add(new TableCell(rnd.Next(2) == 0));
-                            break;
-                        case 1:
                             row.Add(new TableCell(rnd.Next()));
                             break;
-                        case 2:
+                        case 1:
                             row.Add(new TableCell(rnd.NextDouble()));
                             break;
-                        case 3:
-                            row.Add(new TableCell(englishDic[rnd.Next(englishDic.Length)]));
-                            break;
                         default:
-                            var start = new DateTime(1995, 1, 1);
-                            var range = (DateTime.Today - start).Days;           
-                            var date = start.AddDays(rnd.Next(range));
-                            row.Add(new TableCell(date));
+                            row.Add(new TableCell(englishDic[rnd.Next(englishDic.Length)]));
                             break;
                     }
                 }
